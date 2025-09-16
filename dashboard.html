@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Ancorar</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <h1>Dashboard Ancorar</h1>
+    <button id="btn-logout" class="btn-primary">Sair</button>
+  </div>
+</header>
+
+<main class="wrap container">
+  <h2>Currículos</h2>
+  <table id="tabela-dashboard">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Arquivo</th>
+        <th>Visualizações</th>
+        <th>Quem visualizou</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</main>
+
+<script type="module">
+import { monitorarAuth, logout, carregarCurriculos, getUsuario, visualizarCurriculo } from './js/auth.js';
+
+document.getElementById('btn-logout').addEventListener("click", ()=> logout());
+
+monitorarAuth(async user=>{
+  if(!user) return window.location.href = "index.html";
+
+  const usuario = await getUsuario(user.uid);
+  const isContratante = usuario.tipo === "contratante";
+  const tbody = document.querySelector("#tabela-dashboard tbody");
+  tbody.innerHTML = "";
+
+  const curriculos = await carregarCurriculos();
+
+  Object.entries(curriculos).forEach(([id, cv])=>{
+    // Marinheiro vê apenas quem visualizou seu currículo
+    if(!isContratante && cv.ownerId !== user.uid) return;
+
+    // Contratante vê todos
+    const tr = document.createElement("tr");
+
+    let visualizadores = "";
+    if(cv.visualizadoPor){
+      visualizadores = Object.values(cv.visualizadoPor).map(v=>v.nome).join(", ");
+    }
+
+    tr.innerHTML = `
+      <td>${cv.nome}</td>
+      <td>${cv.email}</td>
+      <td><a href="${cv.arquivoBase64}" target="_blank">Ver PDF</a></td>
+      <td>${cv.visualizacoes || 0}</td>
+      <td>${visualizadores}</td>
+    `;
+
+    // Se contratante, marcar que visualizou
+    if(isContratante){
+      tr.addEventListener("click", ()=> visualizarCurriculo(id,user.uid,usuario.nome));
+    }
+
+    tbody.appendChild(tr);
+  });
+});
+</script>
+</body>
+</html>

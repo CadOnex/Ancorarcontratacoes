@@ -1,128 +1,157 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ancorar | Plataforma de Marinheiros</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ancorar | Plataforma de Marinheiros</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrap">
-      <h1>Ancorar</h1>
-      <p class="subtitle">Plataforma de contratação de marinheiros</p>
-    </div>
-  </header>
 
-  <nav class="main-nav">
-    <div class="wrap nav-wrap">
-      <ul>
-        <li><a href="#cadastro">Cadastro</a></li>
-        <li><a href="#como-funciona">Como Funciona</a></li>
-        <li><a href="#contato">Contato</a></li>
-      </ul>
-    </div>
-  </nav>
+<header class="site-header">
+  <div class="wrap">
+    <h1>Ancorar</h1>
+    <p class="subtitle">Plataforma de contratação de marinheiros</p>
+    <button id="btn-logout" class="btn-primary" style="display:none;">Sair</button>
+  </div>
+</header>
 
-  <main>
-    <section id="cadastro" class="container wrap">
-      <h2>Para proprietários</h2>
-      <p>Basta se cadastrar, descrever a vaga ou necessidade do serviço e, em poucos cliques, encontrar marinheiros disponíveis na sua região.</p>
+<nav class="main-nav">
+  <div class="wrap nav-wrap">
+    <ul>
+      <li><a href="#cadastro-login" id="link-login">Cadastro / Login</a></li>
+      <li><a href="#envio-curriculo" id="link-curriculo" style="display:none;">Enviar Currículo</a></li>
+      <li><a href="dashboard.html" id="link-dashboard" style="display:none;">Dashboard</a></li>
+    </ul>
+  </div>
+</nav>
 
-      <h3>Para marinheiros</h3>
-      <p>Os profissionais podem criar seus perfis, destacando suas experiências e qualificações para serem contratados.</p>
-      <div class="center-btn">
-        <a href="#form-mariner" class="btn-primary">Enviar Currículo</a>
-      </div>
-    </section>
+<main class="wrap container">
 
-    <section id="como-funciona" class="container wrap">
-      <h2>Como Funciona</h2>
-      <div class="cards">
-        <article class="card">
-          <h4>1 — Cadastre</h4>
-          <p>Crie sua conta e preencha informações básicas.</p>
-        </article>
-        <article class="card">
-          <h4>2 — Publique a vaga</h4>
-          <p>Descreva a necessidade: diária, CLT, período, local.</p>
-        </article>
-        <article class="card">
-          <h4>3 — Contrate</h4>
-          <p>Selecione candidatos com histórico e avaliações.</p>
-        </article>
-      </div>
-    </section>
+  <!-- CADASTRO / LOGIN -->
+  <section id="cadastro-login">
+    <h2>Cadastro</h2>
+    <form id="form-cadastro">
+      <label>Nome</label><input type="text" id="cad-nome" required>
+      <label>E-mail</label><input type="email" id="cad-email" required>
+      <label>Senha</label><input type="password" id="cad-senha" required>
+      <label>Tipo</label>
+      <select id="cad-tipo" required>
+        <option value="marinheiro">Marinheiro</option>
+        <option value="contratante">Contratante</option>
+      </select>
+      <button type="submit" class="btn-primary">Cadastrar</button>
+    </form>
 
-    <section id="contato" class="container wrap">
-      <h2>Contato</h2>
-      <p>Entre em contato ou envie seu currículo diretamente através dos formulários abaixo.</p>
+    <h2>Login</h2>
+    <form id="form-login">
+      <label>E-mail</label><input type="email" id="login-email" required>
+      <label>Senha</label><input type="password" id="login-senha" required>
+      <button type="submit" class="btn-primary">Entrar</button>
+    </form>
+  </section>
 
-      <div id="mensagem-sucesso" class="mensagem-sucesso"></div>
+  <!-- ENVIO DE CURRÍCULO -->
+  <section id="envio-curriculo" style="display:none;">
+    <h2>Envio de Currículo</h2>
+    <div id="mensagem-sucesso" class="mensagem-sucesso" style="display:none;"></div>
+    <form id="form-curriculo">
+      <label>Nome</label><input type="text" id="cv-nome" required>
+      <label>E-mail</label><input type="email" id="cv-email" required>
+      <label>Currículo (PDF)</label><input type="file" id="cv-arquivo" accept=".pdf" required>
+      <button type="submit" class="btn-primary">Enviar Currículo</button>
+    </form>
+  </section>
 
-      <div class="forms-grid">
-        <div class="form-box" id="form-mariner">
-          <h3>Envio de Currículo</h3>
-          <form id="form-curriculo">
-            <label for="nome-mariner">Nome</label>
-            <input type="text" id="nome-mariner" name="nome" required>
+</main>
 
-            <label for="email-mariner">E-mail</label>
-            <input type="email" id="email-mariner" name="email" required>
+<footer class="site-footer">
+  <div class="wrap">
+    <p>© <span id="ano"></span> Ancorar — Todos os direitos reservados.</p>
+  </div>
+</footer>
 
-            <label for="arquivo-cv">Currículo (PDF)</label>
-            <input type="file" id="arquivo-cv" name="arquivo" accept=".pdf" required>
+<script type="module">
+import { cadastrarUsuario, loginUsuario, enviarCurriculo, monitorarAuth, logout, getUsuario } from './js/auth.js';
 
-            <button type="submit" class="btn-primary">Enviar Currículo</button>
-          </form>
-        </div>
+document.getElementById('ano').textContent = new Date().getFullYear();
 
-        <div class="form-box">
-          <h3>Contratar Marinheiro</h3>
-          <form id="form-contratante">
-            <label for="nome-contratante">Nome</label>
-            <input type="text" id="nome-contratante" name="nome" required>
+// Cadastro
+document.getElementById("form-cadastro").addEventListener("submit", e=>{
+  e.preventDefault();
+  cadastrarUsuario(
+    document.getElementById("cad-nome").value,
+    document.getElementById("cad-email").value,
+    document.getElementById("cad-senha").value,
+    document.getElementById("cad-tipo").value
+  );
+  e.target.reset();
+});
 
-            <label for="email-contratante">E-mail</label>
-            <input type="email" id="email-contratante" name="email" required>
+// Login
+document.getElementById("form-login").addEventListener("submit", e=>{
+  e.preventDefault();
+  loginUsuario(
+    document.getElementById("login-email").value,
+    document.getElementById("login-senha").value
+  );
+});
 
-            <label for="descricao-vaga">Descrição da Vaga</label>
-            <textarea id="descricao-vaga" name="descricao" rows="4" placeholder="Descreva a necessidade..." required></textarea>
+// Envio Currículo
+document.getElementById("form-curriculo").addEventListener("submit", e=>{
+  e.preventDefault();
+  const arquivo = document.getElementById("cv-arquivo").files[0];
+  enviarCurriculo(
+    document.getElementById("cv-nome").value,
+    document.getElementById("cv-email").value,
+    arquivo
+  ).then(()=>{
+    const msg = document.getElementById("mensagem-sucesso");
+    msg.textContent = "Currículo enviado com sucesso!";
+    msg.style.display = "block";
+    setTimeout(()=>{ msg.style.display="none"; },3000);
+  });
+  e.target.reset();
+});
 
-            <button type="submit" class="btn-primary">Enviar Solicitação</button>
-          </form>
-        </div>
-      </div>
-    </section>
-  </main>
+// Logout
+document.getElementById("btn-logout").addEventListener("click", ()=> logout());
 
-  <footer class="site-footer">
-    <div class="wrap">
-      <p>© <span id="ano"></span> Ancorar — Todos os direitos reservados.</p>
-    </div>
-  </footer>
+// Monitorar autenticação e ajustar UI
+monitorarAuth(async user=>{
+  if(user){
+    document.getElementById("btn-logout").style.display="inline-block";
 
-  <script>
-    document.getElementById('ano').textContent = new Date().getFullYear();
+    const usuario = await getUsuario(user.uid);
 
-    function mostrarMensagem(texto) {
-      const msg = document.getElementById('mensagem-sucesso');
-      msg.textContent = texto;
-      msg.style.display = 'block';
-      setTimeout(() => { msg.style.display = 'none'; }, 3000);
+    // Dashboard dinâmico
+    const linkDashboard = document.getElementById("link-dashboard");
+    linkDashboard.style.display = "inline-block";
+    if(usuario.tipo === "marinheiro"){
+      linkDashboard.textContent = "Visualizar Currículos";
+      document.getElementById("envio-curriculo").style.display = "block";
+    } else {
+      linkDashboard.textContent = "Currículos Recebidos";
+      document.getElementById("envio-curriculo").style.display = "none";
     }
 
-    document.getElementById('form-curriculo').addEventListener('submit', function(event) {
-      event.preventDefault();
-      mostrarMensagem('Currículo enviado com sucesso!');
-      this.reset();
-    });
+    // Oculta link de login/cadastro
+    document.getElementById("link-login").style.display = "none";
 
-    document.getElementById('form-contratante').addEventListener('submit', function(event) {
-      event.preventDefault();
-      mostrarMensagem('Solicitação enviada com sucesso!');
-      this.reset();
-    });
-  </script>
+    // Preencher campos do currículo
+    document.getElementById("cv-nome").value = user.displayName || "";
+    document.getElementById("cv-email").value = user.email || "";
+
+    document.getElementById("cadastro-login").style.display="none";
+  }else{
+    document.getElementById("btn-logout").style.display="none";
+    document.getElementById("link-dashboard").style.display="none";
+    document.getElementById("link-login").style.display="inline-block";
+    document.getElementById("envio-curriculo").style.display="none";
+    document.getElementById("cadastro-login").style.display="block";
+  }
+});
+</script>
+
 </body>
 </html>
